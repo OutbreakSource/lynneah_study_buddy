@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="440px" height="514px" viewBox="0 0 440 514" enable-background="new 0 0 440 514" xml:space="preserve">
+<rect fill="#FFFFFF" stroke="#666666" stroke-width="2" stroke-miterlimit="10" width="438" height="512"/>
+<radialGradient id="SVGID_2_" cx="128.7144" cy="81.7104" r="44.8018" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+	<stop  offset="0.9632" style="stop-color:#000078;stop-opacity:0.66"/>
+</radialGradient>
+<circle fill="url(#SVGID_2_)" stroke="#2E3192" stroke-miterlimit="10" cx="133" cy="103" r="36"/>
+<radialGradient id="SVGID_4_" cx="132.2856" cy="99.4517" r="7.467" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_4_)" cx="133" cy="103" r="6"/>
+<radialGradient id="SVGID_6_" cx="243.7144" cy="241.7109" r="44.8016" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+	<stop  offset="0.9632" style="stop-color:#000078;stop-opacity:0.66"/>
+</radialGradient>
+<circle fill="url(#SVGID_6_)" stroke="#2E3192" stroke-miterlimit="10" cx="248" cy="263" r="36"/>
+<radialGradient id="SVGID_8_" cx="247.2861" cy="258.4521" r="7.4666" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_8_)" cx="248" cy="262" r="6"/>
+<radialGradient id="SVGID_10_" cx="298.7139" cy="81.7104" r="44.802" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+	<stop  offset="0.9632" style="stop-color:#000078;stop-opacity:0.66"/>
+</radialGradient>
+<circle fill="url(#SVGID_10_)" stroke="#2E3192" stroke-miterlimit="10" cx="303" cy="103" r="36"/>
+<radialGradient id="SVGID_12_" cx="302.2861" cy="99.4517" r="7.4669" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_12_)" cx="303" cy="103" r="6"/>
+<rect x="103" y="145" fill="none" width="72" height="24"/>
+<text transform="matrix(1 0 0 1 103 157.2939)"><tspan x="0" y="0" font-family="'Times-Italic'" font-size="18">s</tspan><tspan x="7.005" y="0" font-family="'Times-Roman'" font-size="18">-orbital</tspan></text>
+<rect x="277" y="145" fill="none" width="72" height="24"/>
+<text transform="matrix(1 0 0 1 277 157.2939)"><tspan x="0" y="0" font-family="'Times-Italic'" font-size="18">s</tspan><tspan x="7.005" y="0" font-family="'Times-Roman'" font-size="18">-orbital</tspan></text>
+<rect x="151" y="193" fill="none" width="150" height="30"/>
+<text transform="matrix(1 0 0 1 156.6221 202.562)"><tspan x="0" y="0" font-family="'Times-Roman'" font-size="14">constructive interference</tspan><tspan x="41.583" y="16.8" font-family="'Times-Roman'" font-size="14">(in phase)</tspan></text>
+<rect x="169" y="307" fill="none" width="114" height="36"/>
+<text transform="matrix(1 0 0 1 170.9912 316.5625)"><tspan x="0" y="0" font-family="'Times-Roman'" font-size="14">electron probability </tspan><tspan x="7.386" y="16.799" font-family="'Times-Roman'" font-size="14">density increases</tspan></text>
+<rect x="163" y="450.99" fill="none" width="132" height="24"/>
+<text transform="matrix(1 0 0 1 163 467.3838)"><tspan x="0" y="0" font-family="'Times-Roman'" font-size="24">σ</tspan><tspan x="13.348" y="0" font-family="'Times-Roman'" font-size="18"> bonding orbital</tspan></text>
+<g>
+	<g>
+		<line fill="none" stroke="#29ABE2" stroke-width="4" stroke-miterlimit="10" x1="62" y1="169" x2="172" y2="169"/>
+		<g>
+			<path fill="#29ABE2" d="M168.105,169l-4.383-7.206l0.246-0.163l11.75,4.667c4.094,0.9,8.188,1.801,12.281,2.702
+				c-4.094,0.9-8.188,1.801-12.281,2.702l-11.75,4.667l-0.246-0.123L168.105,169z"/>
+		</g>
+	</g>
+</g>
+<g>
+	<g>
+		<line fill="none" stroke="#29ABE2" stroke-width="4" stroke-miterlimit="10" x1="263" y1="169" x2="373" y2="169"/>
+		<g>
+			<path fill="#29ABE2" d="M266.895,169l4.383-7.206l-0.246-0.163l-11.75,4.667c-4.094,0.9-8.188,1.801-12.281,2.702
+				c4.094,0.9,8.188,1.801,12.281,2.702l11.75,4.667l0.246-0.123L266.895,169z"/>
+		</g>
+	</g>
+</g>
+<radialGradient id="SVGID_23_" cx="197.7144" cy="241.7109" r="44.8016" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+	<stop  offset="0.9632" style="stop-color:#000078;stop-opacity:0.66"/>
+</radialGradient>
+<circle fill="url(#SVGID_23_)" stroke="#2E3192" stroke-miterlimit="10" cx="202" cy="263" r="36"/>
+<radialGradient id="SVGID_25_" cx="201.2856" cy="259.4521" r="7.4668" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_25_)" cx="202" cy="263" r="6"/>
+<radialGradient id="SVGID_27_" cx="247.2861" cy="394.4521" r="7.4666" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_27_)" cx="248" cy="398" r="6"/>
+<radialGradient id="SVGID_29_" cx="201.2856" cy="395.4521" r="7.4668" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="0.9632" style="stop-color:#000000"/>
+</radialGradient>
+<circle fill="url(#SVGID_29_)" cx="202" cy="399" r="6"/>
+<rect fill="#D7EDFF" stroke="#666666" stroke-width="2" stroke-miterlimit="10" width="288" height="54"/>
+<rect x="7" y="7" fill="none" width="276" height="24"/>
+<text transform="matrix(1 0 0 1 13 24.2559)" font-family="'Helvetica-Bold'" font-size="24">Sigma Bond Formation</text>
+<rect x="79" y="31" fill="none" width="114" height="24"/>
+<text transform="matrix(1 0 0 1 83.9922 47.3677)" font-family="'Times-Italic'" font-size="24">s - orbitals</text>
+<radialGradient id="SVGID_34_" cx="217.8569" cy="375.1621" r="60.6044" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+	<stop  offset="0.9632" style="stop-color:#000078;stop-opacity:0.66"/>
+</radialGradient>
+<path fill="url(#SVGID_34_)" stroke="#2E3192" stroke-miterlimit="10" d="M285,400c0,16.568-26.863,42-60,42
+	c-33.137,0-60-25.432-60-42s26.863-42,60-42C258.137,358,285,383.432,285,400z"/>
+<g>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="215.623" y1="248.045" x2="226.645" y2="237.023"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="212.53" y1="256.138" x2="228.948" y2="239.72"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="211.695" y1="261.974" x2="231.085" y2="242.583"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="211.934" y1="266.733" x2="233.041" y2="245.626"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="212.8" y1="270.868" x2="234.794" y2="248.873"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="214.077" y1="274.591" x2="236.299" y2="252.368"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="215.653" y1="278.015" x2="237.481" y2="256.186"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="217.463" y1="281.204" x2="238.207" y2="260.46"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="219.469" y1="284.198" x2="238.214" y2="265.453"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="221.651" y1="287.018" x2="236.949" y2="271.719"/>
+	
+		<line fill="none" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" x1="224.001" y1="289.666" x2="232.656" y2="281.012"/>
+</g>
+<text transform="matrix(1 0 0 1 376 507.4639)" font-family="'Times-Roman'" font-size="8">©mccord 2012</text>
+</svg>
