@@ -48,7 +48,7 @@ const Exam = () => {
         setQuestion(questions[0]);
 
         // When the component unmounts, stop the stopwatch
-    }, []);
+    }, [questions, randomizeQuestions]);
 
     useEffect(() => {
         // When the user's answer is correct, move on to the next question and randomize the questions
@@ -62,7 +62,7 @@ const Exam = () => {
             setShowAnswer(false); // Hide the answer when moving on to the next question
 
         }
-    }, [isCorrect]);
+    }, [isCorrect, question, questions, randomizeQuestions]);
 
 
     return (
