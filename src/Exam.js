@@ -175,11 +175,19 @@ const Exam = () => {
         return { x, y };
     };
 
+
     return (
         // eslint-disable-next-line no-restricted-globals
         <div>
-            <div style={{padding:  150, overflow:"auto", width: "80%", display:"flex"}}>
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "100vh"
+            }}>
                 <Grid2 container direction={"column"} alignItems={"center"} justifyContent={"center"} spacing={3}>
+
                     <div style={{
                         width: "100%",
                         display: "flex",
@@ -203,9 +211,6 @@ const Exam = () => {
                             </Box>
                         </Grid2>
                     </div>
-
-
-
 
                     <Box sx={{backgroundColor: '#FBF0D9', opacity:.70, borderRadius: 5}}>
                         <div style={{width: 1600, marginRight: "auto", marginLeft: "auto", display: "flex", justifyContent: "center"}}>
