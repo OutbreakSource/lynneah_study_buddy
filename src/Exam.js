@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import deck from './attempt.json';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import {Button, ButtonGroup, TextField, Typography} from "@mui/material";
+import "./Exam.css";
+import {Box, Button, ButtonGroup, TextField, Typography} from "@mui/material";
 
 const Exam = () => {
 
@@ -27,14 +28,15 @@ const Exam = () => {
 
     function stripPrompt(prompt) {
 
+        console.log(prompt)
         if (prompt.includes("img src")) {
             prompt = prompt.replace(removal, "[ANSWER]")
             prompt = prompt.replaceAll("{", "");
             prompt = prompt.replaceAll("}", "");
         } else {
             prompt = prompt.replace(removal, "[ANSWER]")
-
         }
+        console.log(prompt)
 
         return prompt;
     }
@@ -93,7 +95,6 @@ const Exam = () => {
             if (questions[nextQuestionIndex].prompt.includes("img src")) {
                 let copyPrompt = questions[nextQuestionIndex].prompt.replaceAll("\"", "")
                     .replaceAll("<div>", "");
-                console.log(copyPrompt)
                 setFlag(true)
                 copyPrompt = copyPrompt.split(imageAdd)[0].split(">")[0].split("=")[1]
 
@@ -149,94 +150,131 @@ const Exam = () => {
 
 
     return (
-        <div style={{margin: 160, padding: 50}}>
-
-            <Grid2 container direction={"column"} alignItems={"center"} spacing={5}>
-                <Grid2 item xs={8} xl={5}>
-                    <div dangerouslySetInnerHTML={{__html: question.prompt}}>
-
-                    </div>
-                    <div>
-                        {flag && <img src={image} alt={"currentImage"} style={{width: "100%", maxWidth: 500}}/>}
-                    </div>
-                </Grid2>
-                <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"}>
-                    <TextField label={"Answer"} onChange={(event) => setAnswer(event.target.value)}>
-                    </TextField>
-                    <Button type={"submit"} variant={"outlined"} size={"large"}
-                            style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}}
-                            onClick={handleSubmit}>
-                        Submit
-
-                    </Button>
-                    <Button type={"submit"} variant={"outlined"} size={"large"}
-                            style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}}
-                            onClick={() => setShowAnswer(true)}>
-                        Show Answer
-                    </Button>
-                    <Button type={"regenerate"} variant={"outlined"} size={"large"}
-                            style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}}
-                            onClick={() => getQuestions()}>
-                        Gen
-                    </Button>
-                    <Button onClick={() => {
-                        moveQuestion()
+        // eslint-disable-next-line no-restricted-globals
+        <div>
+            <div style={{padding:  150, overflow:"auto", width: "80%", display:"flex"}}>
+                <Grid2 container direction={"column"} alignItems={"center"} justifyContent={"center"} spacing={3}>
+                    <div style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center"
                     }}>
-                        Force Skip
-                    </Button>
-                    <Typography gutterBottom variant={"caption"}>
-                        {showAnswer && <p style={{
-                            color: 'red',
-                            flex: 'content',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        }}></p>}
-                        {showAnswer && <div dangerouslySetInnerHTML={{__html: question.answer}}></div>}
+                        <Grid2 item xs={8} xl={6}>
+                            <text style={{ color: '#FFFFFF', textShadow: '2px 2px #000000' }}>
+                                Prompt:
+                            </text>
+                            <Box sx={{
+                                border: 'none',
+                                backgroundColor: '#FBF0D9',
+                                opacity: 0.70,
+                                overflow: "hidden",
+                                width: 'auto',
+                                height: 100,
+                                maxHeight:300,
+                                whiteSpace: 'normal'  // set whiteSpace to normal
+                            }}>
+                                <div dangerouslySetInnerHTML={{__html: question.prompt}}></div>
+                            </Box>
+                        </Grid2>
+                    </div>
 
-                        {showAnswer && <p style={{
-                            color: 'red',
-                            flex: 'content',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            fontSize: 10
-                        }}>loser</p>}
-                    </Typography>
+
+
+                    <Box sx={{backgroundColor: '#FBF0D9', opacity:.70, borderRadius: 5}}>
+                        <div style={{width: 1600, marginRight: "auto", marginLeft: "auto", display: "flex", justifyContent: "center"}}>
+                            <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"} alignItems={"center"}>
+                                <TextField label={"Answer"} onChange={(event) => setAnswer(event.target.value)}></TextField>
+                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={handleSubmit}>
+                                    Submit
+                                </Button>
+                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => setShowAnswer(true)}>
+                                    Show Answer
+                                </Button>
+                                <Button type={"regenerate"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => getQuestions()}>
+                                    Gen
+                                </Button>
+                                <Button onClick={() => {moveQuestion()}} style={{color: "red"}}>
+                                    Force Skip
+                                </Button>
+
+                                <Box sx={{ border: '1px solid black', p: 2 }}>
+                                    <Typography gutterBottom variant="caption">
+                                        {showAnswer && (
+                                            <div
+                                                dangerouslySetInnerHTML={{__html: question.answer}}
+                                                style={{
+                                                    backgroundColor: "darkcyan",
+                                                    borderRadius: 4,
+                                                    padding: 10,
+                                                    marginBottom: 10,
+                                                    fontSize: 16,
+                                                    lineHeight: 1.5,
+                                                }}
+                                            />
+                                        )}
+                                        {showAnswer && <p style={{color: 'red', fontSize: 10, textAlign: 'center', margin: 'auto'}}>loser</p>}
+                                    </Typography>
+                                </Box>
+
+                            </Grid2>
+                        </div>
+                    </Box>
+
+
+
 
                 </Grid2>
-            </Grid2>
-            <ButtonGroup
-                disableElevation
-                variant="contained"
-                aria-label="Disabled elevation buttons"
-                size={"large"}
-            >
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Behavioral")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Behavioral")}>Behavioral</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Biochemistry")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Biochemistry")}>Biochemistry</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Biology")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Biology")}>Biology</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Essential Equations")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Essential Equations")}>Essential Equations</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("General Chemistry")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("General Chemistry")}>General Chemistry</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Organic Chemistry")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Organic Chemistry")}>Organic Chemistry</Button>
-                <Button
-                    variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Physics and Math")) ? "contained" : "outlined"}
-                    onClick={() => buttonPress("Physics and Math")}>Physics and Math</Button>
-            </ButtonGroup>
+                <Grid2 item xs={1} xl={4} container direction={"row"} justify="center" alignItems="center">
+                    {flag && (
+                        <Box style={{width: '50%', textAlign: 'right'}}>
+                            <img src={image} alt={"currentImage"} style={{maxWidth: "70%", height: 'auto'}}/>
+                        </Box>
+                    )}
+                </Grid2>
 
-        </div>);
-};
+                <div className={"button-group-container"}>
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                        size={"large"}
+                        sx={{backgroundColor: "0044E7FF"}}
+                    >
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Behavioral")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Behavioral")}>Behavioral</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Biochemistry")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Biochemistry")}>Biochemistry</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Biology")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Biology")}>Biology</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Essential Equations")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Essential Equations")}>Essential Equations</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("General Chemistry")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("General Chemistry")}>General Chemistry</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Organic Chemistry")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Organic Chemistry")}>Organic Chemistry</Button>
+                        <Button
+                            variant={categories.find(item => JSON.stringify(item) === JSON.stringify("Physics and Math")) ? "contained" : "outlined"}
+                            onClick={() => buttonPress("Physics and Math")}>Physics and Math</Button>
+                    </ButtonGroup>
+                </div>
+                <div style={{
+                    position: 'absolute',
+                    top: 5,
+                    right: 5,
+                }}>
+                    <iframe title={"dini"} width="400" height="225" src="https://www.youtube.com/embed/MVPTGNGiI-4" style={{margin: '0 auto'}}></iframe>
+                </div>
+
+
+
+            </div>
+        </div>)};
 
 export default Exam;
 
