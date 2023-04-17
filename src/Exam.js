@@ -84,7 +84,7 @@ const Exam = () => {
     const [questions, setQuestions] = useState([]);
     const [question, setQuestion] = useState({prompt: "", answer: ""});
     const [answer, setAnswer] = useState("");
-    //const [isCorrect, setIsCorrect] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false); // Add a state variable to keep track of whether the answer should be shown
     const [image, setImage] = useState("");
     const [flag, setFlag] = useState(false)
@@ -116,19 +116,36 @@ const Exam = () => {
         setShowAnswer(false);
 
     }
+    const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+    const [incorrect, setIncorrect] = useState(true)
+
+    const resetText = () => {
+        setAnswer("");
+
+    }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
         try{
+            setPopupPosition(getRandomPosition());
             if (answer.toLowerCase() === question.answer.toLowerCase()) {
-                //setIsCorrect(true);
+                setIsCorrect(true);
+                setTimeout(() => {
+                    setIsCorrect(false);
+                }, 3000);
                 moveQuestion()
-                setAnswer("");
+                resetText()
+
 
                 // Hide the answer when moving on to the next question
             } else {
-                //setIsCorrect(false);
-                setAnswer("");
+                setIncorrect(true);
+                setTimeout(() => {
+                    setIncorrect(false);
+                }, 3000);
+                setIsCorrect(false);
+                resetText()
             }
 
         } catch{
@@ -138,6 +155,7 @@ const Exam = () => {
     };
 
     const randomizeQuestions = () => {
+
         // Create a copy of the questions array and shuffle it using the Fisher-Yates algorithm
         const shuffledQuestions = [...questions];
         for (let i = shuffledQuestions.length - 1; i > 0; i--) {
@@ -148,6 +166,14 @@ const Exam = () => {
 
     };
 
+    const getRandomPosition = () => {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const x = Math.floor(Math.random() * (screenWidth - 100)) + 50;
+        const y = Math.floor(Math.random() * (screenHeight - 100)) + 50;
+
+        return { x, y };
+    };
 
     return (
         // eslint-disable-next-line no-restricted-globals
@@ -180,24 +206,62 @@ const Exam = () => {
 
 
 
+
                     <Box sx={{backgroundColor: '#FBF0D9', opacity:.70, borderRadius: 5}}>
                         <div style={{width: 1600, marginRight: "auto", marginLeft: "auto", display: "flex", justifyContent: "center"}}>
                             <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"} alignItems={"center"}>
-                                <TextField label={"Answer"} onChange={(event) => setAnswer(event.target.value)}></TextField>
+                                <TextField label={"Answer"} onChange={(event) => {
+                                    setAnswer(event.target.value)
+                                    if(incorrect){
+                                        setAnswer("")
+                                    }
+                                }
+                                }></TextField>
+                                {isCorrect && (
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: `${popupPosition.y}px`,
+                                            left: `${popupPosition.x}px`,
+                                            backgroundColor: "yellow",
+                                            padding: "10px",
+                                            borderRadius: "15px",
+                                            boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+                                            opacity: "0.3",
+                                            transform: "opacity 2s 5s, padding 3s"
+                                        }}>
+                                        <p>{"You're so hot"}</p>
+                                    </div>
+                                )}
+                                {incorrect && (
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            top: `${popupPosition.y}px`,
+                                            left: `${popupPosition.x}px`,
+                                            backgroundColor: "yellow",
+                                            padding: "10px",
+                                            borderRadius: "15px",
+                                            boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
+                                            opacity: "0.3",
+                                            transform: "opacity 2s 5s, padding 3s"
+                                        }}>
+                                        <p>{"You're still hot"}</p>
+                                    </div>
+                                )}
                                 <Button type={"submit"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={handleSubmit}>
                                     Submit
                                 </Button>
-                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => setShowAnswer(true)}>
+                                <Button type={"showAns"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => setShowAnswer(true)}>
                                     Show Answer
                                 </Button>
                                 <Button type={"regenerate"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => getQuestions()}>
                                     Gen
                                 </Button>
-                                <Button onClick={() => {moveQuestion()}} style={{color: "red"}}>
+                                <Button  variant="outlined" size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px', color: "red"}} onClick={() => {moveQuestion()}}>
                                     Force Skip
                                 </Button>
-
-                                <Box sx={{ border: '1px solid black', p: 2 }}>
+                                <Box>
                                     <Typography gutterBottom variant="caption">
                                         {showAnswer && (
                                             <div
