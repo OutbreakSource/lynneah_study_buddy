@@ -175,6 +175,14 @@ const Exam = () => {
         return { x, y };
     };
 
+    const channels = ['MVPTGNGiI-4', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
+    const [channel, changeChannel] = useState("MVPTGNGiI-4");
+
+    function channelChange(){
+        const randomIndex = Math.floor(Math.random() * channels.length);
+        changeChannel(channels[randomIndex]);
+    }
+
 
     return (
         // eslint-disable-next-line no-restricted-globals
@@ -336,8 +344,13 @@ const Exam = () => {
                     position: 'absolute',
                     top: 5,
                     right: 5,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center'
                 }}>
-                    <iframe title={"dini"} width="400" height="225" src="https://www.youtube.com/embed/MVPTGNGiI-4" style={{margin: '0 auto'}}></iframe>
+                    <iframe title={"dini"} width="400" height="225" src={"https://www.youtube.com/embed/" + channel + "?autoplay=1&mute=1"} allow='autoplay; encrypted-media' style={{margin: '0 auto'}}></iframe>
+                    <Button variant={"contained"} style={{marginTop: '10px', color: "lightblue"}}
+                        onClick={() => channelChange()}>Change Channel</Button>
                 </div>
 
 
