@@ -2,16 +2,28 @@ import React, {useState} from "react";
 import deck from './attempt.json';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import "./Exam.css";
-import {Box, Button, ButtonGroup, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, ButtonGroup, TextField, Typography} from "@mui/material";
 
 const Exam = () => {
-
-
+    const channels = ['MVPTGNGiI-4', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
+    const [channel, changeChannel] = useState("MVPTGNGiI-4");
+    const [questions, setQuestions] = useState([]);
+    const [question, setQuestion] = useState({prompt: "", answer: ""});
+    const [answer, setAnswer] = useState("");
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [showAnswer, setShowAnswer] = useState(false); // Add a state variable to keep track of whether the answer should be shown
+    const [image, setImage] = useState("");
     const [categories, setCategories] = useState(["Behavioral", "Biochemistry", "Biology",
         "Essential Equations", "General Chemistry", "Organic Chemistry", "Physics and Math"])
+    const promptStrip = new RegExp("{{c[0-9]::(?<answer>[^:}]+)(.?::(?<hint>[^}]*))?}}")
+    const imageAdd = new RegExp("(<img[^>]+src=\")(?<image>[^\"]+)");
+    const [popupPosition, setPopupPosition] = useState({x: 0, y: 0});
+    const [incorrect, setIncorrect] = useState(true)
+    const [loading, setLoading] = useState(false)
+
 
     function buttonPress(category) {
-        if (categories.find(item => JSON.stringify(item) === JSON.stringify(category))) {
+         if (categories.find(item => JSON.stringify(item) === JSON.stringify(category))) {
             const arr = categories.filter((item) => item !== category);
             setCategories(arr);
         } else {
@@ -19,115 +31,60 @@ const Exam = () => {
             arr.push(category)
             setCategories(arr)
         }
+        getQuestions()
     }
-
-
-    const re = new RegExp("(::(.+).})|(::(.+).:|})");
-    const removal = new RegExp("{{(c[0-9]::.+.)}}");
-    const imageAdd = new RegExp("<img src=(.+)\">");
-
-    function stripPrompt(prompt) {
-
-        console.log(prompt)
-        if (prompt.includes("img src")) {
-            prompt = prompt.replace(removal, "[ANSWER]")
-            prompt = prompt.replaceAll("{", "");
-            prompt = prompt.replaceAll("}", "");
-        } else {
-            prompt = prompt.replace(removal, "[ANSWER]")
-        }
-        console.log(prompt)
-
-        return prompt;
-    }
-
-    function getAnswer(ansList) {
-
-
-        let curr = ""
-        for (let i = 0; i < ansList.length; i++) {
-            if (ansList[i] != null) {
-                if (!ansList[i].includes("{") && !ansList[i].includes("}")
-                    && !ansList.includes("<") &&
-                    !ansList[i].includes(">")) {
-                    if (ansList[i].includes(":")) {
-                        curr = ansList[i].split(":")[0]
-                    } else {
-                        curr = ansList[i]
-                    }
-                }
-            }
-        }
-
-        return curr;
-
-    }
-
 
     function getQuestions() {
         let temp = []
         for (let i = 0; i < 7; i++) {
             for (let j = 0; j < deck.dataPull[i].notes.length; j++) {
                 if (categories.find(item => JSON.stringify(item) === JSON.stringify(deck.dataPull[i].name))) {
-                    const prompt = stripPrompt(deck.dataPull[i].notes[j].fields[0]);
-                    let answerList = deck.dataPull[i].notes[j].fields[0].split(re)
-                    let currentAnswer = getAnswer(answerList)
-                    temp.push({prompt: prompt, answer: currentAnswer})
+                    let prompt = deck.dataPull[i].notes[j].fields[0];
+                    let regexPull = promptStrip.exec(prompt);
+                    try {
+                        const answer = (regexPull.groups.answer === undefined ? "" : regexPull.groups.answer);
+                        const hint = (regexPull.groups.hint === undefined ? "[ANSWER]" : regexPull.groups.hint);
+                        let replacement = regexPull[0];
+                        prompt = prompt.replace(replacement, hint);
+                        console.log(prompt)
+                        console.log(regexPull[0])
+                        temp.push({ prompt, answer });
+                    } catch {
+                        console.log("Stop reading the console Nerd");
+                    }
                 }
             }
         }
-        setQuestions(temp)
-
+        setQuestions(temp);
     }
 
-
-    const [questions, setQuestions] = useState([]);
-    const [question, setQuestion] = useState({prompt: "", answer: ""});
-    const [answer, setAnswer] = useState("");
-    const [isCorrect, setIsCorrect] = useState(false);
-    const [showAnswer, setShowAnswer] = useState(false); // Add a state variable to keep track of whether the answer should be shown
-    const [image, setImage] = useState("");
-    const [flag, setFlag] = useState(false)
-
-    function moveQuestion(){
+    function moveQuestion() {
+        setLoading(false)
         const nextQuestionIndex = questions.indexOf(question) + 1;
         if (nextQuestionIndex < questions.length) {
             if (questions[nextQuestionIndex].prompt.includes("img src")) {
-                let copyPrompt = questions[nextQuestionIndex].prompt.replaceAll("\"", "")
-                    .replaceAll("<div>", "");
-                setFlag(true)
-                copyPrompt = copyPrompt.split(imageAdd)[0].split(">")[0].split("=")[1]
-
-                if(copyPrompt.includes("/ ")){
-                    copyPrompt.replace("/ ", "")
-                }
-                setImage(require("./media/" + copyPrompt))
+                const imageName = imageAdd.exec(questions[nextQuestionIndex].prompt).groups.image
+                imageName.replaceAll(" \\", "")
+                setImage(require("./media/" + imageName))
+                questions[nextQuestionIndex].prompt = questions[nextQuestionIndex].prompt.replace(imageAdd, "").replace("\">", "")
+                setQuestion(questions[nextQuestionIndex])
+            } else {
                 setQuestion(questions[nextQuestionIndex]);
-                setAnswer("")
-            }
-            else{
-                setQuestion(questions[nextQuestionIndex]);
-                setFlag(false)
                 setAnswer("");
+                setImage("")
+
             }
-
         }
-        randomizeQuestions();
         setShowAnswer(false);
-
+        randomizeQuestions();
     }
-    const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
-    const [incorrect, setIncorrect] = useState(true)
 
-    const resetText = () => {
-        setAnswer("");
 
-    }
 
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        try{
+        try {
             setPopupPosition(getRandomPosition());
             if (answer.toLowerCase() === question.answer.toLowerCase()) {
                 setIsCorrect(true);
@@ -135,8 +92,6 @@ const Exam = () => {
                     setIsCorrect(false);
                 }, 3000);
                 moveQuestion()
-                resetText()
-
 
                 // Hide the answer when moving on to the next question
             } else {
@@ -145,13 +100,10 @@ const Exam = () => {
                     setIncorrect(false);
                 }, 3000);
                 setIsCorrect(false);
-                resetText()
             }
-
-        } catch{
+        } catch {
             moveQuestion()
         }
-
     };
 
     const randomizeQuestions = () => {
@@ -172,17 +124,19 @@ const Exam = () => {
         const x = Math.floor(Math.random() * (screenWidth - 100)) + 50;
         const y = Math.floor(Math.random() * (screenHeight - 100)) + 50;
 
-        return { x, y };
+        return {x, y};
     };
 
-    const channels = ['MVPTGNGiI-4', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
-    const [channel, changeChannel] = useState("MVPTGNGiI-4");
 
-    function channelChange(){
+    function channelChange() {
         const randomIndex = Math.floor(Math.random() * channels.length);
         changeChannel(channels[randomIndex]);
     }
 
+    function startRefresh(){
+        getQuestions()
+        setLoading(true)
+    }
 
     return (
         // eslint-disable-next-line no-restricted-globals
@@ -195,6 +149,7 @@ const Exam = () => {
                 height: "100vh"
             }}>
                 <Grid2 container direction={"column"} alignItems={"center"} justifyContent={"center"} spacing={3}>
+                    {loading && <Alert severity="info">Press Force Skip after pressing start</Alert>}
 
                     <div style={{
                         width: "100%",
@@ -202,7 +157,7 @@ const Exam = () => {
                         justifyContent: "center"
                     }}>
                         <Grid2 item xs={8} xl={6}>
-                            <text style={{ color: '#FFFFFF', textShadow: '2px 2px #000000' }}>
+                            <text style={{color: '#FFFFFF', textShadow: '2px 2px #000000'}}>
                                 Prompt:
                             </text>
                             <Box sx={{
@@ -212,7 +167,7 @@ const Exam = () => {
                                 overflow: "hidden",
                                 width: 'auto',
                                 height: 100,
-                                maxHeight:300,
+                                maxHeight: 300,
                                 whiteSpace: 'normal'  // set whiteSpace to normal
                             }}>
                                 <div dangerouslySetInnerHTML={{__html: question.prompt}}></div>
@@ -220,12 +175,19 @@ const Exam = () => {
                         </Grid2>
                     </div>
 
-                    <Box sx={{backgroundColor: '#FBF0D9', opacity:.70, borderRadius: 5}}>
-                        <div style={{width: 1600, marginRight: "auto", marginLeft: "auto", display: "flex", justifyContent: "center"}}>
-                            <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"} alignItems={"center"}>
+                    <Box sx={{backgroundColor: '#FBF0D9', opacity: .70, borderRadius: 5}}>
+                        <div style={{
+                            width: 1600,
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            display: "flex",
+                            justifyContent: "center"
+                        }}>
+                            <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"}
+                                   alignItems={"center"}>
                                 <TextField label={"Answer"} onChange={(event) => {
                                     setAnswer(event.target.value)
-                                    if(incorrect){
+                                    if (incorrect) {
                                         setAnswer("")
                                     }
                                 }
@@ -262,53 +224,77 @@ const Exam = () => {
                                         <p>{"You're still hot"}</p>
                                     </div>
                                 )}
-                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={handleSubmit}>
+                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{
+                                    maxWidth: '80px',
+                                    maxHeight: '55px',
+                                    minWidth: '80px',
+                                    minHeight: '55px'
+                                }} onClick={handleSubmit}>
                                     Submit
                                 </Button>
-                                <Button type={"showAns"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => setShowAnswer(true)}>
+                                <Button type={"showAns"} variant={"outlined"} size={"large"} style={{
+                                    maxWidth: '80px',
+                                    maxHeight: '55px',
+                                    minWidth: '80px',
+                                    minHeight: '55px'
+                                }} onClick={() => setShowAnswer(true)}>
                                     Show Answer
                                 </Button>
-                                <Button type={"regenerate"} variant={"outlined"} size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px'}} onClick={() => getQuestions()}>
-                                    Gen
-                                </Button>
-                                <Button  variant="outlined" size={"large"} style={{maxWidth: '80px', maxHeight: '55px', minWidth: '80px', minHeight: '55px', color: "red"}} onClick={() => {moveQuestion()}}>
+                                <Button variant="outlined" size={"large"} style={{
+                                    maxWidth: '80px',
+                                    maxHeight: '55px',
+                                    minWidth: '80px',
+                                    minHeight: '55px',
+                                    color: "red"
+                                }} onClick={() => {
+                                    moveQuestion()
+                                }}>
                                     Force Skip
                                 </Button>
-                                <Box>
+                                <Box style={{ position: "relative" }}>
                                     <Typography gutterBottom variant="caption">
                                         {showAnswer && (
                                             <div
-                                                dangerouslySetInnerHTML={{__html: question.answer}}
+                                                dangerouslySetInnerHTML={{ __html: question.answer }}
                                                 style={{
                                                     backgroundColor: "darkcyan",
                                                     borderRadius: 4,
                                                     padding: 10,
                                                     marginBottom: 10,
                                                     fontSize: 16,
-                                                    lineHeight: 1.5,
+                                                    lineHeight: 1.5
                                                 }}
                                             />
                                         )}
-                                        {showAnswer && <p style={{color: 'red', fontSize: 10, textAlign: 'center', margin: 'auto'}}>loser</p>}
+                                        {showAnswer && (
+                                            <p
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: 10,
+                                                    textAlign: "center",
+                                                    margin: "auto"
+                                                }}
+                                            >
+                                                loser
+                                            </p>
+                                        )}
                                     </Typography>
+                                    {image.length !== 0 && (
+                                        <Box style={{ position: "absolute", bottom: 250, right: 450 }}>
+                                            <img
+                                                src={image}
+                                                alt={"currentImage"}
+                                                style={{ maxHeight: "250px"}}
+                                            />
+                                        </Box>
+                                    )}
                                 </Box>
+
 
                             </Grid2>
                         </div>
                     </Box>
-
-
-
-
                 </Grid2>
-                <Grid2 item xs={1} xl={4} container direction={"row"} justify="center" alignItems="center">
-                    {flag && (
-                        <Box style={{width: '50%', textAlign: 'right'}}>
-                            <img src={image} alt={"currentImage"} style={{maxWidth: "70%", height: 'auto'}}/>
-                        </Box>
-                    )}
-                </Grid2>
-
                 <div className={"button-group-container"}>
                     <ButtonGroup
                         disableElevation
@@ -340,6 +326,7 @@ const Exam = () => {
                             onClick={() => buttonPress("Physics and Math")}>Physics and Math</Button>
                     </ButtonGroup>
                 </div>
+
                 <div style={{
                     position: 'absolute',
                     top: 5,
@@ -348,15 +335,22 @@ const Exam = () => {
                     flexDirection: 'column',
                     alignItems: 'center'
                 }}>
-                    <iframe title={"dini"} width="400" height="225" src={"https://www.youtube.com/embed/" + channel + "?autoplay=1&mute=1"} allow='autoplay; encrypted-media' style={{margin: '0 auto'}}></iframe>
+                    <iframe title={"dini"} width="400" height="225"
+                            src={"https://www.youtube.com/embed/" + channel + "?autoplay=1&mute=1"}
+                            allow='autoplay; encrypted-media' style={{margin: '0 auto'}}></iframe>
                     <Button variant={"contained"} style={{marginTop: '10px', color: "lightblue"}}
-                        onClick={() => channelChange()}>Change Channel</Button>
+                            onClick={() => channelChange()}>Change Channel</Button>
                 </div>
-
-
-
             </div>
-        </div>)};
+            <div>
+                <Button variant={"contained"} style={{ position: 'absolute', bottom: 150, left: '50%', transform: 'translateX(-50%)'
+                }} onClick={() => startRefresh()}>
+                    Start
+                </Button>
+            </div>
+
+        </div>)
+};
 
 export default Exam;
 
