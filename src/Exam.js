@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import deck from './attempt.json';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import "./Exam.css";
-import {Alert, Box, Button, ButtonGroup, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, ButtonGroup, Typography} from "@mui/material";
 
 const Exam = () => {
     const channels = ['MVPTGNGiI-4', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
