@@ -20,6 +20,8 @@ const Exam = () => {
     const [popupPosition, setPopupPosition] = useState({x: 0, y: 0});
     const [incorrect, setIncorrect] = useState(true)
     const [loading, setLoading] = useState(false)
+    const[buttonAns, setButtonAns] = useState([])
+
 
 
     function buttonPress(category) {
@@ -34,6 +36,18 @@ const Exam = () => {
         getQuestions()
     }
 
+    function buttonPressAnswer(answer) {
+        setAnswer(answer)
+        if (buttonAns.find(item => JSON.stringify(item) === JSON.stringify(answer))) {
+            const arr = buttonAns.filter((item) => item !== answer);
+            setButtonAns(arr);
+        } else {
+            const arr = buttonAns.slice();
+            arr.push(answer)
+            setButtonAns(arr)
+        }
+    }
+
     function getQuestions() {
         let temp = []
         for (let i = 0; i < 7; i++) {
@@ -46,8 +60,6 @@ const Exam = () => {
                         const hint = (regexPull.groups.hint === undefined ? "[ANSWER]" : regexPull.groups.hint);
                         let replacement = regexPull[0];
                         prompt = prompt.replace(replacement, hint);
-                        console.log(prompt)
-                        console.log(regexPull[0])
                         temp.push({ prompt, answer });
                     } catch {
                         console.log("Stop reading the console Nerd");
@@ -57,6 +69,8 @@ const Exam = () => {
         }
         setQuestions(temp);
     }
+
+    const [index, setIndex] = useState(null)
 
     function moveQuestion() {
         setLoading(false)
@@ -68,8 +82,10 @@ const Exam = () => {
                 setImage(require("./media/" + imageName))
                 questions[nextQuestionIndex].prompt = questions[nextQuestionIndex].prompt.replace(imageAdd, "").replace("\">", "")
                 setQuestion(questions[nextQuestionIndex])
+                setIndex(nextQuestionIndex)
             } else {
                 setQuestion(questions[nextQuestionIndex]);
+                setIndex(nextQuestionIndex)
                 setAnswer("");
                 setImage("")
 
@@ -82,8 +98,7 @@ const Exam = () => {
 
 
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = () => {
         try {
             setPopupPosition(getRandomPosition());
             if (answer.toLowerCase() === question.answer.toLowerCase()) {
@@ -105,6 +120,7 @@ const Exam = () => {
             moveQuestion()
         }
     };
+
 
     const randomizeQuestions = () => {
 
@@ -137,6 +153,36 @@ const Exam = () => {
         getQuestions()
         setLoading(true)
     }
+
+    function questionButton() {
+        const steps = [];
+        const ans = Math.floor(Math.random() * 3)
+        if (index != null) {
+            for (let i = 0; i <= 3; i++) {
+                if (i === ans) {
+                    steps.push(
+                        <Button
+                            variant={buttonAns.find(item => JSON.stringify(item) === JSON.stringify(question.answer)) ? "outlined" : "contained"}
+                            onClick={() => buttonPressAnswer(question.answer)}>
+                            {question.answer}
+                        </Button>
+                    );
+                } else {
+                    steps.push(
+                        <Button
+                            variant={buttonAns.find(item => JSON.stringify(item) === JSON.stringify(questions[index + i].answer)) ? "outlined" : "contained"}
+                            onClick={() => buttonPressAnswer(questions[index + i].answer)}>>
+                            {questions[index + i].answer}
+                        </Button>
+                    );
+                }
+            }
+        }
+
+
+        return (<div style={{position: "fixed"}}>{ steps }</div>);
+    }
+
 
     return (
         // eslint-disable-next-line no-restricted-globals
@@ -185,13 +231,15 @@ const Exam = () => {
                         }}>
                             <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"}
                                    alignItems={"center"}>
-                                <TextField label={"Answer"} onChange={(event) => {
-                                    setAnswer(event.target.value)
-                                    if (incorrect) {
-                                        setAnswer("")
-                                    }
-                                }
-                                }></TextField>
+                                <ButtonGroup
+                                    disableElevation
+                                    variant="contained"
+                                    aria-label="Disabled elevation buttons"
+                                    size={"large"}
+                                    sx={{backgroundColor: "0044E7FF"}}
+                                >
+                                    {questionButton()}
+                                </ButtonGroup>
                                 {isCorrect && (
                                     <div
                                         style={{
@@ -205,7 +253,6 @@ const Exam = () => {
                                             opacity: "0.3",
                                             transform: "opacity 2s 5s, padding 3s"
                                         }}>
-                                        <p>{"You're so hot"}</p>
                                     </div>
                                 )}
                                 {incorrect && (
@@ -221,7 +268,6 @@ const Exam = () => {
                                             opacity: "0.3",
                                             transform: "opacity 2s 5s, padding 3s"
                                         }}>
-                                        <p>{"You're still hot"}</p>
                                     </div>
                                 )}
                                 <Button type={"submit"} variant={"outlined"} size={"large"} style={{
