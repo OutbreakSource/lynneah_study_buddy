@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import deck from './attempt.json';
+import deck from './pythonParse.json';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import "./Exam.css";
 import {Alert, Box, Button, ButtonGroup, Typography} from "@mui/material";
@@ -12,15 +12,14 @@ const Exam = () => {
     const [answer, setAnswer] = useState("");
     const [isCorrect, setIsCorrect] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false); // Add a state variable to keep track of whether the answer should be shown
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(null);
     const [categories, setCategories] = useState(["Behavioral", "Biochemistry", "Biology",
         "Essential Equations", "General Chemistry", "Organic Chemistry", "Physics and Math"])
-    const promptStrip = new RegExp("{{c[0-9]::(?<answer>[^:}]+)(.?::(?<hint>[^}]*))?}}")
-    const imageAdd = new RegExp("(<img[^>]+src=\")(?<image>[^\"]+)");
     const [popupPosition, setPopupPosition] = useState({x: 0, y: 0});
     const [incorrect, setIncorrect] = useState(true)
     const [loading, setLoading] = useState(false)
     const[buttonAns, setButtonAns] = useState([])
+
 
 
 
@@ -51,19 +50,23 @@ const Exam = () => {
     function getQuestions() {
         let temp = []
         for (let i = 0; i < 7; i++) {
-            for (let j = 0; j < deck.dataPull[i].notes.length; j++) {
-                if (categories.find(item => JSON.stringify(item) === JSON.stringify(deck.dataPull[i].name))) {
-                    let prompt = deck.dataPull[i].notes[j].fields[0];
-                    let regexPull = promptStrip.exec(prompt);
-                    try {
-                        const answer = (regexPull.groups.answer === undefined ? "" : regexPull.groups.answer);
-                        const hint = (regexPull.groups.hint === undefined ? "[ANSWER]" : regexPull.groups.hint);
-                        let replacement = regexPull[0];
-                        prompt = prompt.replace(replacement, hint);
-                        temp.push({ prompt, answer });
-                    } catch {
-                        console.log("Stop reading the console Nerd");
+            for (let j = 0; j < deck.data[i].data.length; j++) {
+                if (categories.find(item => JSON.stringify(item) === JSON.stringify(deck.data[i].name))) {
+                    try{
+                        let prompt = deck.data[i].data[j].text;
+                        let answer = deck.data[i].data[j].answers[0];
+                        if (require("./media/" + deck.data[i].data[j].image) == null){
+                            temp.push({ prompt, answer});
+                        }
+                        else{
+                            let image = (deck.data[i].data[j].image)
+                            temp.push({ prompt, answer, image});
+                        }
+
+                    } catch{
+                        console.log("stop reading the console nerd")
                     }
+
                 }
             }
         }
@@ -73,28 +76,25 @@ const Exam = () => {
     const [index, setIndex] = useState(null)
 
     function moveQuestion() {
-        generateRandomNumber()
-        setLoading(false)
+        generateRandomNumber();
+        setLoading(false);
         const nextQuestionIndex = questions.indexOf(question) + 1;
         if (nextQuestionIndex < questions.length) {
-            if (questions[nextQuestionIndex].prompt.includes("img src")) {
-                const imageName = imageAdd.exec(questions[nextQuestionIndex].prompt).groups.image
-                imageName.replaceAll(" \\", "")
-                setImage(require("./media/" + imageName))
-                questions[nextQuestionIndex].prompt = questions[nextQuestionIndex].prompt.replace(imageAdd, "").replace("\">", "")
-                setQuestion(questions[nextQuestionIndex])
-                setIndex(nextQuestionIndex)
-            } else {
-                setQuestion(questions[nextQuestionIndex]);
-                setIndex(nextQuestionIndex)
-                setAnswer("");
-                setImage("")
+            // Update the image before setting the question state
+            const nextQuestion = questions[nextQuestionIndex];
+            const image = nextQuestion.image !== null ? require("./media/" + nextQuestion.image) : null;
+            setImage(image);
 
-            }
+            // Set the question and other states
+            setQuestion(nextQuestion);
+            setIndex(nextQuestionIndex);
+            setAnswer("");
         }
         setShowAnswer(false);
         randomizeQuestions();
     }
+    console.log(image)
+    console.log(question)
 
 
 
@@ -158,7 +158,6 @@ const Exam = () => {
 
     const generateRandomNumber = () => {
         const randomNumber = Math.floor(Math.random() * 3);
-        console.log(randomNumber)
         setAnsIndex(randomNumber);
     };
 
@@ -276,7 +275,7 @@ const Exam = () => {
                             display: "flex",
                             justifyContent: "center"
                         }}>
-                            {image.length !== 0 && (
+                            {image !== null && (
                                 <Box style={{ position: "fixed", bottom: 250, right: "10%"}}>
                                     <img
                                         src={image}
