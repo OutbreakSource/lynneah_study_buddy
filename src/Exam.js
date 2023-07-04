@@ -5,8 +5,8 @@ import "./Exam.css";
 import {Alert, Box, Button, ButtonGroup, Typography} from "@mui/material";
 
 const Exam = () => {
-    const channels = ['MVPTGNGiI-4', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
-    const [channel, changeChannel] = useState("MVPTGNGiI-4");
+    const channels = ['8YA825ZNAIE', 'jfKfPfyJRdk', 'e3L1PIY1pN8', "Q57Xz-38G_U"];
+    const [channel, changeChannel] = useState("8YA825ZNAIE");
     const [questions, setQuestions] = useState([]);
     const [question, setQuestion] = useState({prompt: "", answer: ""});
     const [answer, setAnswer] = useState("");
@@ -73,6 +73,7 @@ const Exam = () => {
     const [index, setIndex] = useState(null)
 
     function moveQuestion() {
+        generateRandomNumber()
         setLoading(false)
         const nextQuestionIndex = questions.indexOf(question) + 1;
         if (nextQuestionIndex < questions.length) {
@@ -153,25 +154,52 @@ const Exam = () => {
         getQuestions()
         setLoading(true)
     }
+    const [ansIndex, setAnsIndex] = useState(null);
+
+    const generateRandomNumber = () => {
+        const randomNumber = Math.floor(Math.random() * 3);
+        console.log(randomNumber)
+        setAnsIndex(randomNumber);
+    };
 
     function questionButton() {
         const steps = [];
-        const ans = Math.floor(Math.random() * 3)
         if (index != null) {
             for (let i = 0; i <= 3; i++) {
-                if (i === ans) {
+                if (i === ansIndex) {
                     steps.push(
                         <Button
-                            variant={buttonAns.find(item => JSON.stringify(item) === JSON.stringify(question.answer)) ? "outlined" : "contained"}
-                            onClick={() => buttonPressAnswer(question.answer)}>
+                            key={i}
+                            style={{ flex: 1 }}
+                            variant={
+                                buttonAns.find(
+                                    (item) =>
+                                        JSON.stringify(item) === JSON.stringify(question.answer)
+                                )
+                                    ? "outlined"
+                                    : "contained"
+                            }
+                            onClick={() => buttonPressAnswer(question.answer)}
+                        >
                             {question.answer}
                         </Button>
                     );
                 } else {
                     steps.push(
                         <Button
-                            variant={buttonAns.find(item => JSON.stringify(item) === JSON.stringify(questions[index + i].answer)) ? "outlined" : "contained"}
-                            onClick={() => buttonPressAnswer(questions[index + i].answer)}>>
+                            key={i}
+                            style={{ flex: 1 }}
+                            variant={
+                                buttonAns.find(
+                                    (item) =>
+                                        JSON.stringify(item) ===
+                                        JSON.stringify(questions[index + i].answer)
+                                )
+                                    ? "outlined"
+                                    : "contained"
+                            }
+                            onClick={() => buttonPressAnswer(questions[index + i].answer)}
+                        >
                             {questions[index + i].answer}
                         </Button>
                     );
@@ -179,8 +207,25 @@ const Exam = () => {
             }
         }
 
-
-        return (<div style={{position: "fixed"}}>{ steps }</div>);
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: "10px",
+                    columnGap: "10px",
+                    position: "sticky"
+                }}
+            >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    {steps.slice(0, 2)}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                    {steps.slice(2)}
+                </div>
+            </div>
+        );
     }
 
 
@@ -203,6 +248,7 @@ const Exam = () => {
                         justifyContent: "center"
                     }}>
                         <Grid2 item xs={8} xl={6}>
+
                             <text style={{color: '#FFFFFF', textShadow: '2px 2px #000000'}}>
                                 Prompt:
                             </text>
@@ -218,6 +264,7 @@ const Exam = () => {
                             }}>
                                 <div dangerouslySetInnerHTML={{__html: question.prompt}}></div>
                             </Box>
+
                         </Grid2>
                     </div>
 
@@ -229,17 +276,18 @@ const Exam = () => {
                             display: "flex",
                             justifyContent: "center"
                         }}>
+                            {image.length !== 0 && (
+                                <Box style={{ position: "fixed", bottom: 250, right: "10%"}}>
+                                    <img
+                                        src={image}
+                                        alt={"currentImage"}
+                                        style={{ maxHeight: "250px", maxWidth: "500"}}
+                                    />
+                                </Box>
+                            )}
+
                             <Grid2 item xs={5} xl={5} spacing={10} style={{padding: 150}} container direction={"row"}
-                                   alignItems={"center"}>
-                                <ButtonGroup
-                                    disableElevation
-                                    variant="contained"
-                                    aria-label="Disabled elevation buttons"
-                                    size={"large"}
-                                    sx={{backgroundColor: "0044E7FF"}}
-                                >
-                                    {questionButton()}
-                                </ButtonGroup>
+                                   >
                                 {isCorrect && (
                                     <div
                                         style={{
@@ -270,33 +318,39 @@ const Exam = () => {
                                         }}>
                                     </div>
                                 )}
-                                <Button type={"submit"} variant={"outlined"} size={"large"} style={{
-                                    maxWidth: '80px',
-                                    maxHeight: '55px',
-                                    minWidth: '80px',
-                                    minHeight: '55px'
-                                }} onClick={handleSubmit}>
-                                    Submit
-                                </Button>
-                                <Button type={"showAns"} variant={"outlined"} size={"large"} style={{
-                                    maxWidth: '80px',
-                                    maxHeight: '55px',
-                                    minWidth: '80px',
-                                    minHeight: '55px'
-                                }} onClick={() => setShowAnswer(true)}>
-                                    Show Answer
-                                </Button>
-                                <Button variant="outlined" size={"large"} style={{
-                                    maxWidth: '80px',
-                                    maxHeight: '55px',
-                                    minWidth: '80px',
-                                    minHeight: '55px',
-                                    color: "red"
-                                }} onClick={() => {
-                                    moveQuestion()
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "15vh"
+
                                 }}>
-                                    Force Skip
-                                </Button>
+                                    <Button type={"submit"} variant={"outlined"} size={"large"} style={{
+                                        maxWidth: '80px',
+                                        maxHeight: '55px',
+                                        minWidth: '80px',
+                                        minHeight: '55px'
+                                    }} onClick={handleSubmit}>
+                                        Submit
+                                    </Button>
+                                    <Button type={"showAns"} variant={"outlined"} size={"large"} style={{
+                                        maxWidth: '80px',
+                                        maxHeight: '55px',
+                                        minWidth: '80px',
+                                        minHeight: '55px'
+                                    }} onClick={() => setShowAnswer(true)}>
+                                        Show Answer
+                                    </Button>
+                                    <Button variant="outlined" size={"large"} style={{
+                                        maxWidth: '80px',
+                                        maxHeight: '55px',
+                                        minWidth: '80px',
+                                        minHeight: '55px',
+                                        color: "red"
+                                    }} onClick={moveQuestion}>
+                                        Force Skip
+                                    </Button>
+                                </div>
                                 <Box style={{ position: "relative" }}>
                                     <Typography gutterBottom variant="caption">
                                         {showAnswer && (
@@ -325,19 +379,27 @@ const Exam = () => {
                                             </p>
                                         )}
                                     </Typography>
-                                    {image.length !== 0 && (
-                                        <Box style={{ position: "absolute", bottom: 250, right: 450 }}>
-                                            <img
-                                                src={image}
-                                                alt={"currentImage"}
-                                                style={{ maxHeight: "250px"}}
-                                            />
-                                        </Box>
-                                    )}
+
                                 </Box>
 
 
                             </Grid2>
+                            <ButtonGroup
+                                disableElevation
+                                variant="contained"
+                                aria-label="Disabled elevation buttons"
+                                size="large"
+                                style={{
+                                    position: "fixed",
+                                    top: "68%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                            >
+                                {questionButton()}
+                            </ButtonGroup>
                         </div>
                     </Box>
                 </Grid2>
